@@ -5,6 +5,14 @@ import { UserRepository } from './users.repository';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
+  getById(id: number): Promise<any> {
+    return this.userRepository.getById(id);
+  }
+
+  getAll(): Promise<any[]> {
+    return this.userRepository.getAll();
+  }
+
   async create(data: any): Promise<any> {
     return this.userRepository.create(data);
   }
