@@ -20,4 +20,17 @@ export class UserRepository {
       data,
     });
   }
+
+  async update(id: number, data: any): Promise<any> {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async delete(id: number): Promise<any> {
+    return this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }

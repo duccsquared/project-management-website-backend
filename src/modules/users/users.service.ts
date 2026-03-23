@@ -16,4 +16,12 @@ export class UserService {
   async create(data: any): Promise<any> {
     return this.userRepository.create(data);
   }
+
+  update(id: number, data: any): Promise<any> {
+    return this.userRepository.update(id, data);
+  }
+
+  delete(id: number): Promise<any> {
+    return this.userRepository.delete(id);
+  }
 }
