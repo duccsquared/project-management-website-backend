@@ -1,14 +1,15 @@
-import { Body, Param, Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import { Body, Param, Query, Controller, Get, Post, Put, Delete } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UserDTO } from './dto/users.dto';
+import { QueryDTO } from 'src/common/dto/query.dto';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Get()
-  async getAll(): Promise<any[]> {
-    return this.service.getAll();
+  async getAll(@Query() query: QueryDTO): Promise<any[]> {
+    return this.service.getAll(query);
   }
 
   @Get(':id')

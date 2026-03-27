@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from './users.repository';
 import { UserDTO } from './dto/users.dto';
+import { QueryDTO } from 'src/common/dto/query.dto';
 
 @Injectable()
 export class UserService {
@@ -10,8 +11,8 @@ export class UserService {
     return this.userRepository.getById(id);
   }
 
-  getAll(): Promise<any[]> {
-    return this.userRepository.getAll();
+  getAll(query: QueryDTO): Promise<any[]> {
+    return this.userRepository.getAll(query);
   }
 
   async create(data: UserDTO): Promise<any> {
