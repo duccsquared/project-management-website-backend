@@ -24,7 +24,17 @@ export class UserRepository {
     return this.prisma.user.update({ where: { id }, data });
   }
 
+  async updateMany(query: QueryDTO, data: UserDTO): Promise<any> {
+    const prismaQuery = buildPrismaQuery(query);
+    return this.prisma.user.updateMany({ where: prismaQuery.where, data });
+  }
+
   async delete(id: number): Promise<any> {
     return this.prisma.user.delete({ where: { id } });
+  }
+
+  async deleteMany(query: QueryDTO): Promise<any> {
+    const prismaQuery = buildPrismaQuery(query);
+    return this.prisma.user.deleteMany({ where: prismaQuery.where });
   }
 }

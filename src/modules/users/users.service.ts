@@ -15,7 +15,7 @@ export class UserService {
     return this.userRepository.getAll(query);
   }
 
-  async create(data: UserDTO): Promise<any> {
+  create(data: UserDTO): Promise<any> {
     return this.userRepository.create(data);
   }
 
@@ -23,7 +23,15 @@ export class UserService {
     return this.userRepository.update(id, data);
   }
 
+  updateMany(query: QueryDTO, data: UserDTO): Promise<any> {
+    return this.userRepository.updateMany(query, data);
+  }
+
   delete(id: number): Promise<any> {
     return this.userRepository.delete(id);
+  }
+
+  deleteMany(query: QueryDTO): Promise<any> {
+    return this.userRepository.deleteMany(query);
   }
 }

@@ -27,8 +27,18 @@ export class UserController {
     return this.service.update(parseInt(id), data);
   }
 
+  @Put()
+  async updateMany(@Query() query: QueryDTO, @Body() data: UserDTO): Promise<any> {
+    return this.service.updateMany(query, data);
+  }
+
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<any> {
     return this.service.delete(parseInt(id));
+  }
+
+  @Delete()
+  async deleteMany(@Query() query: QueryDTO): Promise<any> {
+    return this.service.deleteMany(query);
   }
 }
