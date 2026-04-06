@@ -1,44 +1,12 @@
-import { Body, Param, Query, Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { UserService } from './users.service';
 import { UserDTO } from './dto/users.dto';
-import { QueryDTO } from 'src/common/dto/query.dto';
+import { BaseController } from 'src/common/classes/controller';
 
 @Controller('/user')
-export class UserController {
-  constructor(private readonly service: UserService) {}
-
-  @Get()
-  async getAll(@Query() query: QueryDTO): Promise<any[]> {
-    return this.service.getAll(query);
-  }
-
-  @Get(':id')
-  async getById(@Param('id') id: string): Promise<any> {
-    return this.service.getById(parseInt(id));
-  }
-
-  @Post()
-  async create(@Body() data: UserDTO): Promise<any> {
-    return this.service.create(data);
-  }
-
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() data: UserDTO): Promise<any> {
-    return this.service.update(parseInt(id), data);
-  }
-
-  @Put()
-  async updateMany(@Query() query: QueryDTO, @Body() data: UserDTO): Promise<any> {
-    return this.service.updateMany(query, data);
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string): Promise<any> {
-    return this.service.delete(parseInt(id));
-  }
-
-  @Delete()
-  async deleteMany(@Query() query: QueryDTO): Promise<any> {
-    return this.service.deleteMany(query);
+export class UserController extends BaseController<UserDTO> {
+  constructor(protected readonly service: UserService, protected prisma: PrismaService) {
+    super(service, prisma, 'user');
   }
 }
