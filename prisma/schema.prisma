@@ -18,4 +18,13 @@ model User {
   password   String
   name       String?
   avatar_url String?
+  projects   Project[]
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  owner_id    Int
+  owner       User    @relation(fields: [owner_id], references: [id])
+  name        String
+  description String?
 }

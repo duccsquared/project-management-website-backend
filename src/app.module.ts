@@ -6,11 +6,14 @@ import { TestService } from './modules/test/test.service';
 import { UserController } from './modules/users/users.controller';
 import { UserService } from './modules/users/users.service';
 import { UserRepository } from './modules/users/users.repository';
+import { ProjectController } from './modules/project/projects.controller';
+import { ProjectService } from './modules/project/projects.service';
+import { ProjectRepository } from './modules/project/projects.repository';
 import { PrismaService } from 'prisma/prisma.service';
 @Module({
   imports: [],
-  controllers: [AppController, TestController, UserController],
+  controllers: [AppController, TestController, UserController, ProjectController],
   // eslint-disable-next-line prettier/prettier
-  providers: [AppService, TestService, UserService, UserRepository, PrismaService],
+  providers: [AppService, TestService, UserService, UserRepository, PrismaService, ProjectRepository, ProjectService],
 })
 export class AppModule {}
