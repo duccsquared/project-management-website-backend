@@ -1,6 +1,6 @@
 export class ProjectDTO {
   id?: number;
-  owner_id!: number;
+  ownerId!: number;
   name!: string;
   description?: string;
 }

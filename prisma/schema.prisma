@@ -17,14 +17,14 @@ model User {
   email      String  @unique
   password   String
   name       String?
-  avatar_url String?
+  avatarURL  String? @map("avatar_url")
   projects   Project[]
 }
 
 model Project {
   id          Int     @id @default(autoincrement())
-  owner_id    Int
-  owner       User    @relation(fields: [owner_id], references: [id])
+  ownerId     Int     @map("owner_id")
+  owner       User    @relation(fields: [ownerId], references: [id])
   name        String
   description String?
 }
