@@ -1,7 +1,7 @@
 export class UserDTO {
   id?: number;
-  email: string;
-  password: string;
+  email!: string;
+  password!: string;
   name?: string;
   avatarURL?: string;
 }
