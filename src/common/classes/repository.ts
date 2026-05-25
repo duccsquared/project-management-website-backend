@@ -26,8 +26,9 @@ export class BaseRepository<T> {
     return (this.prisma[this.entityName] as unknown as PrismaDelegate).findMany(prismaQuery);
   }
 
-  async getById(id: number): Promise<any> {
-    return (this.prisma[this.entityName] as unknown as PrismaDelegate).findUnique({ where: { id } });
+  async getById(id: number, query: QueryDTO): Promise<any> {
+    const prismaQuery = buildPrismaQuery(query);
+    return (this.prisma[this.entityName] as unknown as PrismaDelegate).findUnique({ include: prismaQuery.include, where: { id } });
   }
 
   async create(data: T): Promise<any> {

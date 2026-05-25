@@ -17,8 +17,8 @@ export class BaseController<T> {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<any> {
-    return this.baseService.getById(parseInt(id));
+  async getById(@Param('id') id: string, @Query() query: QueryDTO): Promise<any> {
+    return this.baseService.getById(parseInt(id), query);
   }
 
   @Post()

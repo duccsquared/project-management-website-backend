@@ -11,8 +11,8 @@ export class BaseService<T> {
     this.entityName = entityName;
   }
 
-  getById(id: number): Promise<any> {
-    return this.baseRepository.getById(id);
+  getById(id: number, query: QueryDTO): Promise<any> {
+    return this.baseRepository.getById(id, query);
   }
 
   getAll(query: QueryDTO): Promise<any[]> {
