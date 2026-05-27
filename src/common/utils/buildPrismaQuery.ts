@@ -38,12 +38,18 @@ export function buildPrismaQuery(query: QueryDTO) {
 
 
   // relational handling
-  const includeObj: Record<string, boolean> = {};
+  const includeObj: Record<string, any> = {};
   if(include != null && typeof include === 'string') {
     const relations: string[] = include.split(',');
 
     relations.forEach((rel: string) => {
-      includeObj[rel] = true;
+      // Support nested includes with dot notation
+      // e.g., "projects.project" or "owner" or "projects.project.owner"
+      if (rel.includes('.')) {
+        buildNestedInclude(includeObj, rel);
+      } else {
+        includeObj[rel] = true;
+      }
     });
   }
 
@@ -76,4 +82,30 @@ function buildNestedRelation(
   current[keys[keys.length - 1]] = {
     [operator]: value as string,
   };
+}
+
+function buildNestedInclude(
+  includeObj: Record<string, any>,
+  path: string,
+) {
+  const keys = path.split('.');
+  
+  let current: Record<string, any> = includeObj;
+  
+  for (let i = 0; i < keys.length; i++) {
+    if (i === keys.length - 1) {
+      // Last key - set to true or create include object if not exists
+      if (!current[keys[i]]) {
+        current[keys[i]] = true;
+      }
+    } else {
+      // Intermediate key - ensure it has an include object
+      if (!current[keys[i]] || typeof current[keys[i]] === 'boolean') {
+        current[keys[i]] = { include: {} };
+      } else if (!(current[keys[i]] as Record<string,any>).include) {
+        (current[keys[i]] as Record<string,any>).include = {};
+      }
+      current = (current[keys[i]] as Record<string,any>).include as Record<string,any>;
+    }
+  }
 }
