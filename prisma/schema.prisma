@@ -13,18 +13,32 @@ datasource db {
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  email      String  @unique
-  password   String
-  name       String?
-  avatarURL  String? @map("avatar_url")
-  projects   Project[]
+  id               Int             @id @default(autoincrement())
+  email            String          @unique
+  password         String
+  name             String?
+  avatarURL        String?         @map("avatar_url")
+  ownedProjects    Project[]
+  projects         ProjectMember[]
 }
 
 model Project {
-  id          Int     @id @default(autoincrement())
-  ownerId     Int     @map("owner_id")
-  owner       User    @relation(fields: [ownerId], references: [id])
+  id          Int            @id @default(autoincrement())
+  ownerId     Int            @map("owner_id")
+  owner       User           @relation(fields: [ownerId], references: [id])
   name        String
   description String?
+  members     ProjectMember[]
+}
+
+// project member model
+model ProjectMember {
+  id        Int     @id @default(autoincrement())
+  projectId Int     @map("project_id")
+  userId    Int     @map("user_id")
+
+  project   Project @relation(fields: [projectId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([projectId, userId])
 }
