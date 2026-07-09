@@ -42,6 +42,7 @@ model ProjectMembers {
   project   Projects @relation(fields: [projectId], references: [id])
   user      Users    @relation(fields: [userId], references: [id])
   role      Roles?  @relation(fields: [roleId], references: [id])
+  tasks     TaskAssignments[]
 
   @@unique([projectId, userId])
   @@map("Project_Members")
@@ -65,4 +66,17 @@ model Tasks {
   projectId   Int       @map("project_id")
   dueDate     DateTime?  @map("due_date")
   project     Projects   @relation(fields: [projectId], references: [id])
+  assignments TaskAssignments[]
+}
+
+model TaskAssignments {
+  id                 Int              @id @default(autoincrement())
+  taskId             Int              @map("task_id")
+  projectMemberId    Int              @map("project_member_id")
+
+  task               Tasks            @relation(fields: [taskId], references: [id])
+  projectMember      ProjectMembers   @relation(fields: [projectMemberId], references: [id])
+
+  @@unique([taskId, projectMemberId])
+  @@map("Task_Assignments")
 }
