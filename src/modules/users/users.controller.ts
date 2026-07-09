@@ -7,6 +7,6 @@ import { BaseController } from 'src/common/classes/controller';
 @Controller('/users')
 export class UserController extends BaseController<UserDTO> {
   constructor(protected readonly service: UserService, protected prisma: PrismaService) {
-    super(service, prisma, 'user');
+    super(service, prisma, 'users');
   }
 }

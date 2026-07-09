@@ -7,6 +7,6 @@ import { BaseService } from 'src/common/classes/service';
 @Injectable()
 export class UserService extends BaseService<UserDTO> {
   constructor(protected userRepository: UserRepository, protected prisma: PrismaService) {
-    super(userRepository,prisma,'user');
+    super(userRepository,prisma,'users');
   }
 }

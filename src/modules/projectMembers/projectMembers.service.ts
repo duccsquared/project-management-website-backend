@@ -7,6 +7,6 @@ import { BaseService } from 'src/common/classes/service';
 @Injectable()
 export class ProjectMemberService extends BaseService<ProjectMemberDTO> {
   constructor(protected projectMemberRepository: ProjectMemberRepository, protected prisma: PrismaService) {
-    super(projectMemberRepository,prisma,'projectMember');
+    super(projectMemberRepository, prisma, 'projectMembers');
   }
 }

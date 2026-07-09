@@ -7,6 +7,6 @@ import { BaseController } from 'src/common/classes/controller';
 @Controller('/projects')
 export class ProjectController extends BaseController<ProjectDTO> {
   constructor(protected readonly service: ProjectService, protected prisma: PrismaService) {
-    super(service, prisma, 'project');
+    super(service, prisma, 'projects');
   }
 }

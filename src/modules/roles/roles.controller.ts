@@ -7,6 +7,6 @@ import { BaseController } from 'src/common/classes/controller';
 @Controller('/roles')
 export class RoleController extends BaseController<RoleDTO> {
   constructor(protected readonly service: RoleService, protected prisma: PrismaService) {
-    super(service, prisma, 'role');
+    super(service, prisma, 'roles');
   }
 }
