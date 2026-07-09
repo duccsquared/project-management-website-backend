@@ -30,6 +30,7 @@ model Project {
   description String?
   members     ProjectMember[]
   roles       Role[]
+  tasks           Task[]
 }
 
 model ProjectMember {
@@ -53,3 +54,14 @@ model Role {
   project         Project @relation(fields: [projectId], references: [id])
   projectMembers  ProjectMember[]
 } 
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  name       String
+  description String?
+  status      String    
+  priority    String 
+  projectId   Int       @map("project_id")
+  dueDate    DateTime?  @map("due_date")
+  project     Project   @relation(fields: [projectId], references: [id])
+}

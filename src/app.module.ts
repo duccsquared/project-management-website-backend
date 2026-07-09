@@ -6,10 +6,11 @@ import { UsersModule } from './modules/users/users.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { ProjectMembersModule } from './modules/projectMembers/projectMembers.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { TasksModule } from './modules/tasks/tasks.module';
 import { TestModule } from './modules/test/test.module';
 
 @Module({
-  imports: [CoreModule, TestModule, UsersModule, ProjectsModule, ProjectMembersModule, RolesModule],
+  imports: [CoreModule, TestModule, UsersModule, ProjectsModule, ProjectMembersModule, RolesModule, TasksModule],
   controllers: [AppController],
   providers: [AppService],
 })
