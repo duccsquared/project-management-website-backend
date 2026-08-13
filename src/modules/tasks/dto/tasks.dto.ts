@@ -5,6 +5,7 @@ export class TaskDTO {
   status?: string;
   priority?: string;
   projectId?: number;
+  position?: number;
   dueDate?: Date;
   createdAt?: Date;
 }

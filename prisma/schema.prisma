@@ -13,70 +13,158 @@ datasource db {
 }
 
 model Users {
-  id               Int             @id @default(autoincrement())
-  email            String          @unique
-  password         String
-  name             String?
-  avatarURL        String?         @map("avatar_url")
-  ownedProjects    Projects[]
-  projects         ProjectMembers[]
+  id            Int              @id @default(autoincrement())
+  email         String           @unique
+  password      String
+  name          String?
+  avatarURL     String?          @map("avatar_url")
+  ownedProjects Projects[]
+  projects      ProjectMembers[]
+  comments      Comments[]
+  activityLogs  ActivityLogs[]
+
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 }
 
 model Projects {
-  id          Int            @id @default(autoincrement())
-  ownerId     Int            @map("owner_id")
-  owner       Users           @relation(fields: [ownerId], references: [id])
-  name        String
-  description String?
-  members     ProjectMembers[]
-  roles       Roles[]
-  tasks       Tasks[]
+  id            Int              @id @default(autoincrement())
+  ownerId       Int              @map("owner_id")
+  owner         Users            @relation(fields: [ownerId], references: [id])
+  name          String
+  description   String?
+  members       ProjectMembers[]
+  roles         Roles[]
+  tasks         Tasks[]
+  activityLogs  ActivityLogs[]
+
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  @@index([ownerId])
 }
 
 model ProjectMembers {
-  id        Int     @id @default(autoincrement())
-  projectId Int     @map("project_id")
-  userId    Int     @map("user_id")
-  roleId    Int?    @map("role_id")
+  id            Int              @id @default(autoincrement())
+  projectId     Int              @map("project_id")
+  userId        Int              @map("user_id")
+  roleId        Int?             @map("role_id")
 
-  project   Projects @relation(fields: [projectId], references: [id])
-  user      Users    @relation(fields: [userId], references: [id])
-  role      Roles?  @relation(fields: [roleId], references: [id])
-  tasks     TaskAssignments[]
+  project       Projects         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user          Users            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          Roles?           @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  tasks         TaskAssignments[]
+
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 
   @@unique([projectId, userId])
+  @@index([userId])
+  @@index([roleId])
   @@map("Project_Members")
 }
 
 model Roles {
-  id              Int     @id @default(autoincrement())
-  name            String  @unique
+  id              Int              @id @default(autoincrement())
+  name            String
   description     String?
-  projectId       Int     @map("project_id")
-  project         Projects @relation(fields: [projectId], references: [id])
+  projectId       Int              @map("project_id")
+
+  project         Projects         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectMembers  ProjectMembers[]
-} 
+
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  @@unique([projectId, name])
+  @@index([projectId])
+}
 
 model Tasks {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String?
-  status      String    
-  priority    String 
-  projectId   Int       @map("project_id")
-  dueDate     DateTime?  @map("due_date")
-  project     Projects   @relation(fields: [projectId], references: [id])
-  assignments TaskAssignments[]
+  id            Int                @id @default(autoincrement())
+  name          String
+  description   String?
+  status        String
+  priority      String
+  position      Int
+  projectId     Int                @map("project_id")
+  dueDate       DateTime?          @map("due_date")
+
+  project       Projects           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignments   TaskAssignments[]
+  attachments   Attachments[]
+  comments      Comments[]
+  activityLogs  ActivityLogs[]
+
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@index([projectId, position])
 }
 
 model TaskAssignments {
-  id                 Int              @id @default(autoincrement())
-  taskId             Int              @map("task_id")
-  projectMemberId    Int              @map("project_member_id")
+  id              Int              @id @default(autoincrement())
+  taskId          Int              @map("task_id")
+  projectMemberId Int              @map("project_member_id")
 
-  task               Tasks            @relation(fields: [taskId], references: [id])
-  projectMember      ProjectMembers   @relation(fields: [projectMemberId], references: [id])
+  task            Tasks            @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  projectMember   ProjectMembers   @relation(fields: [projectMemberId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
 
   @@unique([taskId, projectMemberId])
+  @@index([projectMemberId])
   @@map("Task_Assignments")
+}
+
+model Attachments {
+  id          Int       @id @default(autoincrement())
+  taskId      Int       @map("task_id")
+  fileUrl     String    @map("file_url")
+
+  task        Tasks     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([taskId])
+}
+
+model Comments {
+  id          Int       @id @default(autoincrement())
+  taskId      Int       @map("task_id")
+  userId      Int       @map("user_id")
+  content     String
+
+  user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task        Tasks     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+model ActivityLogs {
+  id          Int        @id @default(autoincrement())
+  projectId   Int?       @map("project_id")
+  userId      Int?       @map("user_id")
+  taskId      Int?       @map("task_id")
+  actionType  String     @map("action_type")
+  metadata    Json?
+
+  project     Projects?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user        Users?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task        Tasks?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@index([projectId])
+  @@index([userId])
+  @@index([taskId])
+  @@index([projectId, createdAt])
 }
