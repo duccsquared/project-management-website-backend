@@ -9,9 +9,10 @@ import { RolesModule } from './modules/roles/roles.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { TaskAssignmentsModule } from './modules/taskAssignments/taskAssignments.module';
 import { TestModule } from './modules/test/test.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [CoreModule, TestModule, UsersModule, ProjectsModule, ProjectMembersModule, RolesModule, TasksModule, TaskAssignmentsModule],
+  imports: [CoreModule, AuthModule, TestModule, UsersModule, ProjectsModule, ProjectMembersModule, RolesModule, TasksModule, TaskAssignmentsModule],
   controllers: [AppController],
   providers: [AppService],
 })
