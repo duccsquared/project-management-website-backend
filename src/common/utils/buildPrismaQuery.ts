@@ -10,7 +10,7 @@ export function buildPrismaQuery(query: QueryDTO) {
     const value: unknown = filters[key] as unknown;
 
     // Split field + operator
-    const [field, operator] = key.split('_');
+    const [field, operator] = key.split('$');
 
     // Default operator
     // valid operators: equals, contains gt, gte, lt, lte, in, not
