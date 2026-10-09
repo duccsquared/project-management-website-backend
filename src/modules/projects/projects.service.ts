@@ -9,4 +9,19 @@ export class ProjectService extends BaseService<ProjectDTO> {
   constructor(protected projectRepository: ProjectRepository, protected prisma: PrismaService) {
     super(projectRepository,prisma,'projects');
   }
+
+  async create(data: ProjectDTO): Promise<any> {
+    return this.prisma.$transaction(async (tx) => {
+      const project = await tx.projects.create({ data: data });
+
+      await tx.projectMembers.create({
+        data: {
+          projectId: project.id,
+          userId: project.ownerId,
+        },
+      });
+
+      return project;
+    });
+  }
 }
