@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { describe, expect, it } from 'node:test';
 import { buildPrismaQuery } from './buildPrismaQuery';
 
 describe('buildPrismaQuery - to-one relational filters', () => {
@@ -132,5 +131,41 @@ describe('buildPrismaQuery - flat filters and pagination still work', () => {
     expect(result.where).toEqual({
       members: { some: { user: { name: { equals: 'Aria' } } } },
     });
+  });
+
+  it('converts numeric string values on flat fields to numbers (projectId=1)', () => {
+    const result = buildPrismaQuery({ projectId: '1' } as any);
+
+    expect(result.where).toEqual({ projectId: { equals: 1 } });
+  });
+
+  it('converts numeric strings for comparison operators like gt/gte/lt/lte', () => {
+    const result = buildPrismaQuery({ 'position$gt': '3' } as any);
+
+    expect(result.where).toEqual({ position: { gt: 3 } });
+  });
+
+  it('supports explicit numeric `equals` operator on flat fields', () => {
+    const result = buildPrismaQuery({ 'projectId$equals': '2' } as any);
+
+    expect(result.where).toEqual({ projectId: { equals: 2 } });
+  });
+
+  it('keeps `in` list values as strings and does not coerce them', () => {
+    const result = buildPrismaQuery({ 'projectId$in': '1,2,3' } as any);
+
+    expect(result.where).toEqual({ projectId: { in: ['1', '2', '3'] } });
+  });
+
+  it('keeps `contains` string searches untouched', () => {
+    const result = buildPrismaQuery({ 'name$contains': '2026' } as any);
+
+    expect(result.where).toEqual({ name: { contains: '2026' } });
+  });
+
+  it('keeps non-numeric string values untouched on flat fields', () => {
+    const result = buildPrismaQuery({ status: 'ACTIVE' } as any);
+
+    expect(result.where).toEqual({ status: { equals: 'ACTIVE' } });
   });
 });

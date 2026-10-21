@@ -51,7 +51,7 @@ export function buildPrismaQuery(query: QueryDTO) {
       continue;
     }
 
-    // Flat (non-relational) fields - keep original behavior unchanged.
+    // Flat (non-relational) fields
     const [field, operator] = key.split('$');
 
     // Default operator
@@ -59,10 +59,21 @@ export function buildPrismaQuery(query: QueryDTO) {
     const prismaOperator = operator || 'equals';
 
     // Handle comma-separated arrays
-    const parsedValue =
+    let parsedValue: unknown =
       prismaOperator === 'in' && typeof value === 'string'
         ? value.split(',')
-        : value as string;
+        : value;
+
+    // Convert numeric strings to numbers for operators that expect a numeric
+    // value (e.g. projectId=1 must be Int, not "1"). 'contains' and 'in' are
+    // left untouched so string searches and list filters keep working.
+    if (
+      prismaOperator !== 'in' &&
+      prismaOperator !== 'contains' &&
+      isNumeric(parsedValue)
+    ) {
+      parsedValue = Number(parsedValue);
+    }
 
     if (!Object.prototype.hasOwnProperty.call(where, field)) {
       // initialize as a record for nested operators
